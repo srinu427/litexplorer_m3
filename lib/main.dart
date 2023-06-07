@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:litexplorer_m3/blur_wrapper.dart';
 import 'package:litexplorer_m3/smb_explorer_view.dart';
 import 'punch_hole_view.dart';
 import 'explorer_view.dart';
@@ -61,56 +64,94 @@ class _LitExHomePageState extends State<LitExHomePage>{
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: NavigationDrawer(
-          children: [
-            const DrawerHeader(child: Text("Quick Links")),
-            ListTile(
-              title: const Text("/sdcard/"),
-              onTap: (){
-                _explorerKey.currentState!.setExplorerDirectory("/sdcard/");
-                Navigator.pop(context);
-              },
+    return
+    Stack(
+      fit: StackFit.expand,
+      children: [
+        Image.asset("assets/background.jpg", fit: BoxFit.cover,),
+        Scaffold(
+          backgroundColor: Colors.transparent,
+          drawer: SafeArea(
+            child: Stack(
+              children: [
+                BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                  child: const SizedBox.expand(),
+                ),
+                NavigationDrawer(
+                  backgroundColor: Colors.white10,
+                  surfaceTintColor: Colors.white10,
+                  shadowColor: Colors.transparent,
+                  children: [
+                    const DrawerHeader(
+                      child: Text("Quick Links")
+                    ),
+                    ListTile(
+                      title: const Text("/sdcard/"),
+                      onTap: (){
+                        _explorerKey.currentState!.setExplorerDirectory("/sdcard/");
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ],
-        ),
-      appBar: AppBar(title: const Text("LitExplorer"),),
-      body:WillPopScope(
-        onWillPop: () async {return _explorerKey.currentState?.onWillPop() as Future<bool>;},
-        child: Center(
-          child: PageView(
-            physics: const NeverScrollableScrollPhysics(),
-            onPageChanged: (idx){
-              setState(() {
-                _selectedPage = idx;
-              });
-            },
-            controller: _pageController,
-            children: _globalPages,
           ),
-        ),
-      ),
-      bottomNavigationBar: NavigationBar(
-        onDestinationSelected: onNavbarTap,
-        selectedIndex: _selectedPage,
-        destinations: const [
-          NavigationDestination(
-            selectedIcon: Icon(Icons.folder_open),
-            icon: Icon(Icons.folder_open_outlined),
-            label: "Explorer",
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(50),
+            child: BlurWrapper(
+              sigmaX: 1, sigmaY: 1,
+              child: AppBar(
+                backgroundColor: Colors.transparent,
+                title: const Text("LitExplorer"),
+              ),
+            ),
           ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.import_export),
-            icon: Icon(Icons.import_export_outlined),
-            label: "Transfer",
+          body:WillPopScope(
+            onWillPop: () async {return _explorerKey.currentState?.onWillPop() as Future<bool>;},
+            child: Center(
+              child: PageView(
+                physics: const NeverScrollableScrollPhysics(),
+                onPageChanged: (idx){
+                  setState(() {
+                    _selectedPage = idx;
+                  });
+                },
+                controller: _pageController,
+                children: _globalPages,
+              ),
+            ),
           ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.import_export),
-            icon: Icon(Icons.import_export_outlined),
-            label: "SMB",
+          bottomNavigationBar: BlurWrapper(
+            sigmaX: 8,
+            sigmaY: 8,
+            child: NavigationBar(
+              backgroundColor: Colors.transparent,
+              surfaceTintColor: Colors.white10,
+              onDestinationSelected: onNavbarTap,
+              selectedIndex: _selectedPage,
+              destinations: const [
+                NavigationDestination(
+                  selectedIcon: Icon(Icons.folder_open,),
+                  icon: Icon(Icons.folder_open_outlined),
+                  label: "Explorer",
+                ),
+                NavigationDestination(
+                  selectedIcon: Icon(Icons.import_export),
+                  icon: Icon(Icons.import_export_outlined),
+                  label: "Transfer",
+                ),
+                NavigationDestination(
+                  selectedIcon: Icon(Icons.import_export),
+                  icon: Icon(Icons.import_export_outlined),
+                  label: "SMB",
+                ),
+              ],
+            ),
           ),
-        ],
-      ),
+        )
+      ],
     );
   }
 

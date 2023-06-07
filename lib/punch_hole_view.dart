@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:dart_ipify/dart_ipify.dart';
 import 'package:flutter/services.dart';
+import 'package:litexplorer_m3/blur_wrapper.dart';
 import 'punch_hole_lib.dart';
 import 'package:http/http.dart' as http;
 
@@ -265,32 +266,37 @@ class PunchHoleViewState extends State<PunchHoleView>  with AutomaticKeepAliveCl
       padding: const EdgeInsets.all(8),
       child: Row(
         children: [
-          NavigationRail(
-            labelType: NavigationRailLabelType.none,
-            destinations: const [
-              NavigationRailDestination(
-                label: Text("Start receiver"),
-                icon: Icon(Icons.file_download_rounded),
-                selectedIcon: Icon(Icons.file_download_rounded),
-              ),
-              NavigationRailDestination(
-                label: Text("Connect to peer"),
-                icon: Icon(Icons.sync_alt_outlined),
-                selectedIcon: Icon(Icons.sync_alt),
-              ),
-              NavigationRailDestination(
-                label: Text("Punch hole"),
-                icon: Icon(Icons.connect_without_contact_outlined),
-                selectedIcon: Icon(Icons.connect_without_contact),
-              ),
-            ],
-            onDestinationSelected: (idx){
-              setState(() {
-                _pageController.jumpToPage(idx);
-                _currentPage = idx;
-              });
-            },
-            selectedIndex: _currentPage,
+          BlurWrapper(
+            sigmaX: 8, sigmaY: 8,
+            clipBorderRadius: BorderRadius.circular(12),
+            child: NavigationRail(
+              backgroundColor: Colors.white10,
+              labelType: NavigationRailLabelType.none,
+              destinations: const [
+                NavigationRailDestination(
+                  label: Text("Start receiver"),
+                  icon: Icon(Icons.file_download_rounded),
+                  selectedIcon: Icon(Icons.file_download_rounded),
+                ),
+                NavigationRailDestination(
+                  label: Text("Connect to peer"),
+                  icon: Icon(Icons.sync_alt_outlined),
+                  selectedIcon: Icon(Icons.sync_alt),
+                ),
+                NavigationRailDestination(
+                  label: Text("Punch hole"),
+                  icon: Icon(Icons.connect_without_contact_outlined),
+                  selectedIcon: Icon(Icons.connect_without_contact),
+                ),
+              ],
+              onDestinationSelected: (idx){
+                setState(() {
+                  _pageController.jumpToPage(idx);
+                  _currentPage = idx;
+                });
+              },
+              selectedIndex: _currentPage,
+            )
           ),
           Expanded(
             //width: 200,

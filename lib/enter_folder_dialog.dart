@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:litexplorer_m3/blur_wrapper.dart';
 
 class EnterFolderDialog extends StatelessWidget{
   final TextEditingController textEditController;
@@ -14,30 +15,46 @@ class EnterFolderDialog extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Container(
-        padding: const EdgeInsets.only(top: 28, left: 16, right: 16,bottom: 4),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: textEditController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: "Directory Path",
-              ),
-            ),
-            TextButton(
-                onPressed: (){
-                  Navigator.of(context).pop();
-                  refreshCallback();
-                },
-                child: const Text("Go")
-            )
-          ],
-        ),
+    return BlurWrapper(
+      sigmaX: 2, sigmaY: 2,
+      child: Dialog(
+          backgroundColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+              side: BorderSide(
+                  width: 2,
+                  color: Theme.of(context).colorScheme.outline,
+                  strokeAlign: BorderSide.strokeAlignOutside
+              )
+          ),
+          child: BlurWrapper(
+              sigmaX: 8, sigmaY: 8,
+              clipBorderRadius: BorderRadius.circular(16),
+              child: Container(
+                padding: const EdgeInsets.only(top: 28, left: 16, right: 16,bottom: 4),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: textEditController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "Directory Path",
+                      ),
+                    ),
+                    TextButton(
+                        onPressed: (){
+                          Navigator.of(context).pop();
+                          refreshCallback();
+                        },
+                        child: const Text("Go")
+                    )
+                  ],
+                ),
+              )
+          )
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:litexplorer_m3/blur_wrapper.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:open_file/open_file.dart';
@@ -103,7 +104,7 @@ class ExplorerViewState extends State<ExplorerView> with AutomaticKeepAliveClien
       !element.entity.path
           .split("/")
           .last
-          .startsWith("."))
+          .startsWith(RegExp(r"(\.|\$)")))
       ];
     }
     combList.sort((a, b) => a.entity.path.toLowerCase().compareTo(b.entity.path.toLowerCase()));
@@ -222,14 +223,27 @@ class ExplorerViewState extends State<ExplorerView> with AutomaticKeepAliveClien
         rowElems.add(const SizedBox(width: 8,));
       }
       rowElems.add(
-        TextButton(
-          onPressed: (){ goHierarchicalDirectoryAtDepth(i + 1); },
-          style: ButtonStyle(
-            shape: MaterialStateProperty.all(
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))
+        BlurWrapper(
+          clipBorderRadius: BorderRadius.circular(8),
+          sigmaX: 4, sigmaY: 4,
+          child: TextButton(
+            onPressed: (){ goHierarchicalDirectoryAtDepth(i + 1); },
+            style: ButtonStyle(
+              backgroundColor: const MaterialStatePropertyAll(Colors.transparent),
+              overlayColor: MaterialStatePropertyAll(Colors.purple.withOpacity(0.4)),
+              shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(
+                  side: BorderSide(
+                    width: 1,
+                    color: Theme.of(context).colorScheme.outline,
+                    strokeAlign: BorderSide.strokeAlignInside,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
             ),
-          ),
-          child: Text('${epSplit[i]}/',),
+            child: Text((epSplit[i] != "")?epSplit[i]: "/",),
+          )
         )
       );
     }
@@ -276,7 +290,11 @@ class ExplorerViewState extends State<ExplorerView> with AutomaticKeepAliveClien
       ),
       const Spacer(),
       const Text("Show Hidden Items"),
-      Switch(value: showHidden, onChanged: toggleHiddenItems,),
+      Switch(
+        inactiveTrackColor: Colors.transparent,
+        value: showHidden,
+        onChanged: toggleHiddenItems,
+      ),
       //Checkbox(value: showHidden, onChanged: toggleHiddenItems,),
 
     ];
@@ -324,7 +342,7 @@ class ExplorerViewState extends State<ExplorerView> with AutomaticKeepAliveClien
                   automaticallyImplyLeading: false,
                   floating: true,
                   snap: true,
-                  //backgroundColor: Colors.transparent,
+                  backgroundColor: Colors.transparent,
                   surfaceTintColor: Colors.transparent,
                   title: makeEasyNavBar(),
                 ),

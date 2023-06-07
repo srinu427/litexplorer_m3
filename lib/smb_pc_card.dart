@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:litexplorer_m3/blur_wrapper.dart';
 
 class SMBElement extends StatelessWidget{
   final String ip;
@@ -7,39 +8,54 @@ class SMBElement extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      color: Theme.of(context).colorScheme.surfaceVariant,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: (){},
-        child: Container(
-          padding: const EdgeInsets.all(8),
-          child: Row(
-            children: [
-              const Icon(Icons.desktop_windows_outlined,size: 48,),
-              const SizedBox(width: 8,),
-              Flexible(
-                child:Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Spacer(),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Text(
-                        ip,
-                        style: const TextStyle(fontSize: 16,),
-                        overflow: TextOverflow.fade,
+    return BlurWrapper(
+      sigmaX: 8, sigmaY: 8,
+      clipBorderRadius: BorderRadius.circular(16),
+      child: Card(
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          side: BorderSide(
+            width: 1,
+            color: Theme.of(context).colorScheme.outline,
+            strokeAlign: BorderSide.strokeAlignOutside,
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular(16)),
+        ),
+        color: Colors.transparent,
+        child: InkWell(
+          hoverColor: Colors.purple.withOpacity(0.4),
+          focusColor: Colors.purple.withOpacity(0.6),
+          highlightColor: Colors.purple.withOpacity(0.75),
+          borderRadius: BorderRadius.circular(12),
+          onTap: (){},
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              children: [
+                const Icon(Icons.desktop_windows_outlined,size: 48,),
+                const SizedBox(width: 8,),
+                Flexible(
+                  child:Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Spacer(),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Text(
+                          ip,
+                          style: const TextStyle(fontSize: 16,),
+                          overflow: TextOverflow.fade,
+                        ),
                       ),
-                    ),
-                    const Spacer(),
-                  ],
+                      const Spacer(),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
+      )
     );
   }
 }

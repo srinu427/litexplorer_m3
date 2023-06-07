@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:litexplorer_m3/blur_wrapper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class FsEntryDetails{
@@ -41,47 +42,62 @@ class FileFolderElement extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      color: Theme.of(context).colorScheme.surfaceVariant,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: (){ tapCallback(index);},
-        child: Container(
-          padding: const EdgeInsets.all(8),
-          child: Row(
-            children: [
-              fseDetails.stats.type == FileSystemEntityType.file?
-              const Icon(Icons.file_present_outlined,size: 48,):
-              const Icon(Icons.folder_outlined, size: 48,),
-              const SizedBox(width: 8,),
-              Flexible(
-                child:Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Spacer(),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Text(
-                        fseDetails.entity.path.split("/").last,
-                        style: const TextStyle(fontSize: 16,),
-                        overflow: TextOverflow.fade,
+    return BlurWrapper(
+      clipBorderRadius: BorderRadius.circular(16),
+      sigmaX: 16, sigmaY: 16,
+      child: Card(
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          side: BorderSide(
+            width: 1,
+            color: Theme.of(context).colorScheme.outline,
+            strokeAlign: BorderSide.strokeAlignOutside,
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular(12)),
+        ),
+        color: Colors.transparent,
+        child: InkWell(
+          hoverColor: Colors.purple.withOpacity(0.4),
+          focusColor: Colors.purple.withOpacity(0.6),
+          highlightColor: Colors.purple.withOpacity(0.75),
+          borderRadius: BorderRadius.circular(12),
+          onTap: (){ tapCallback(index);},
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              children: [
+                fseDetails.stats.type == FileSystemEntityType.file?
+                const Icon(Icons.file_present_outlined,size: 48,):
+                const Icon(Icons.folder_outlined, size: 48,),
+                const SizedBox(width: 8,),
+                Flexible(
+                  child:Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Spacer(),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Text(
+                          fseDetails.entity.path.split("/").last,
+                          style: const TextStyle(fontSize: 16,),
+                          overflow: TextOverflow.fade,
+                        ),
                       ),
-                    ),
-                    fseDetails.stats.type == FileSystemEntityType.file?
-                    Text(
-                      "Size: ${getSizeString(fseDetails.stats.size)}",
-                      style: const TextStyle(fontSize: 8,),
-                    ):
-                    const Text(
-                      "Directory",
-                      style: TextStyle(fontSize: 8,),
-                    ),
-                    const Spacer(),
-                  ],
+                      fseDetails.stats.type == FileSystemEntityType.file?
+                      Text(
+                        "Size: ${getSizeString(fseDetails.stats.size)}",
+                        style: const TextStyle(fontSize: 8,),
+                      ):
+                      const Text(
+                        "Directory",
+                        style: TextStyle(fontSize: 8,),
+                      ),
+                      const Spacer(),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
